@@ -21,7 +21,11 @@
         <lang.syntaxHighlighterFactory
             language="Janitor"
             implementationClass="com.github.eischet.janitoridea.highlighting.JanitorSyntaxHighlighterFactory"/>
-        <toolWindow factoryClass="com.github.eischet.janitoridea.repl.JanitorReplToolWindowFactory" id="JanitorRepl" />
+        <toolWindow
+            factoryClass="com.github.eischet.janitoridea.repl.JanitorReplToolWindowFactory"
+            id="JanitorRepl"
+            anchor="bottom"
+            sideTool="true"/>
         <postStartupActivity implementation="com.github.eischet.janitoridea.startup.MyProjectActivity" />
     </extensions>
 </idea-plugin>
