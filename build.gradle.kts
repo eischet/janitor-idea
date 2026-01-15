@@ -4,6 +4,7 @@ import org.jetbrains.intellij.platform.gradle.TestFrameworkType
 
 plugins {
     id("java") // Java support
+    id("antlr") // ANTLR4 grammar support
     alias(libs.plugins.kotlin) // Kotlin support
     alias(libs.plugins.intelliJPlatform) // IntelliJ Platform Gradle Plugin
     alias(libs.plugins.changelog) // Gradle Changelog Plugin
@@ -22,6 +23,9 @@ kotlin {
 // Configure project's dependencies
 repositories {
     mavenCentral()
+    maven {
+        url = uri("https://repo.srv.eischet.net/releases")
+    }
 
     // IntelliJ Platform Gradle Plugin Repositories Extension - read more: https://plugins.jetbrains.com/docs/intellij/tools-intellij-platform-gradle-plugin-repositories-extension.html
     intellijPlatform {
@@ -31,6 +35,9 @@ repositories {
 
 // Dependencies are managed with Gradle version catalog - read more: https://docs.gradle.org/current/userguide/version_catalogs.html
 dependencies {
+    antlr(libs.antlr)
+    implementation(libs.antlrRuntime)
+    implementation("com.eischet.janitor:janitor-repl:0.9.41")
     testImplementation(libs.junit)
     testImplementation(libs.opentest4j)
 
@@ -48,6 +55,14 @@ dependencies {
         bundledModules(providers.gradleProperty("platformBundledModules").map { it.split(',') })
 
         testFramework(TestFrameworkType.Platform)
+    }
+}
+
+sourceSets {
+    main {
+        java {
+            srcDir("build/generated-src/antlr/main")
+        }
     }
 }
 
@@ -127,6 +142,14 @@ kover {
 }
 
 tasks {
+    generateGrammarSource {
+        arguments.addAll(listOf("-package", "com.github.eischet.janitoridea.grammar"))
+    }
+
+    withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
+        dependsOn(generateGrammarSource)
+    }
+
     wrapper {
         gradleVersion = providers.gradleProperty("gradleVersion").get()
     }

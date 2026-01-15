@@ -9,7 +9,19 @@
     <resource-bundle>messages.MyBundle</resource-bundle>
 
     <extensions defaultExtensionNs="com.intellij">
-        <toolWindow factoryClass="com.github.eischet.janitoridea.toolWindow.MyToolWindowFactory" id="MyToolWindow"/>
+        <notificationGroup
+            id="JanitorWarnings"
+            displayType="BALLOON"
+            isLogByDefault="true"/>
+        <fileType
+            name="Janitor"
+            language="Janitor"
+            implementationClass="com.github.eischet.janitoridea.language.JanitorFileType"
+            extensions="jan;janitor"/>
+        <lang.syntaxHighlighterFactory
+            language="Janitor"
+            implementationClass="com.github.eischet.janitoridea.highlighting.JanitorSyntaxHighlighterFactory"/>
+        <toolWindow factoryClass="com.github.eischet.janitoridea.repl.JanitorReplToolWindowFactory" id="JanitorRepl" />
         <postStartupActivity implementation="com.github.eischet.janitoridea.startup.MyProjectActivity" />
     </extensions>
 </idea-plugin>

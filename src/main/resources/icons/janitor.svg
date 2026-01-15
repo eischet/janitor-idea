@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" height="16" width="16" viewBox="0 0 512 512">
+    <!-- A crappy interpretation of the sacred heart hospital logo (from memory) -->
+    <!-- heart shape borrowed from https://en.m.wikipedia.org/wiki/File:A_perfect_SVG_heart.svg -
+         WTFPL / "Kopimi" licensed by "PD4U", thanks! The Janitor approves of the foul language used in that license, I'm sure. -->
+    <defs>
+        <g id="heart">
+            <path d="M0 200 v-200 h200 a100,100 90 0,1 0,200 a100,100 90 0,1 -200,0 z"/>
+        </g>
+    </defs>
+
+    <circle cx="256" cy="256" r="256" fill="#646591"/>
+    <circle cx="256" cy="256" r="204" fill="#f0f0f0"/>
+    <!--
+    <rect x="32" width="448" y="250" height="24" fill="#888888"/>
+    <rect x="250" width="24" y="32" height="448" fill="#888888"/>
+    -->
+    <g transform="translate(90,300)">
+        <use xlink:href="#heart" class="outline " fill="#a00035" x="128" y="128" transform="rotate(225,150,122)"/>
+    </g>
+</svg>

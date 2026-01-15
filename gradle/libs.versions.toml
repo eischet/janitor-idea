@@ -1,5 +1,6 @@
 [versions]
 # libraries
+antlr = "4.13.1"
 junit = "4.13.2"
 opentest4j = "1.3.0"
 
@@ -11,6 +12,8 @@ kover = "0.9.3"
 qodana = "2025.2.2"
 
 [libraries]
+antlr = { group = "org.antlr", name = "antlr4", version.ref = "antlr" }
+antlrRuntime = { group = "org.antlr", name = "antlr4-runtime", version.ref = "antlr" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 opentest4j = { group = "org.opentest4j", name = "opentest4j", version.ref = "opentest4j" }
 
