@@ -1,15 +1,13 @@
 package com.github.eischet.janitoridea.repl
 
-import com.eischet.janitor.api.JanitorEnvironment
 import com.eischet.janitor.api.JanitorRuntime
 import com.eischet.janitor.api.JanitorScriptProcess
 import com.eischet.janitor.api.types.JanitorObject
 import com.eischet.janitor.api.types.builtin.JNull
 import com.eischet.janitor.api.types.functions.JCallArgs
-import com.eischet.janitor.env.JanitorDefaultEnvironment
 import com.eischet.janitor.repl.JanitorRepl
 import com.eischet.janitor.runtime.BaseRuntime
-import com.eischet.janitor.runtime.JanitorFormattingLocale
+import com.github.eischet.janitoridea.janitor.IdeScriptingEnvironment
 import com.github.eischet.janitoridea.language.JanitorFileType
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.application.ApplicationManager
@@ -29,7 +27,6 @@ import com.intellij.util.ui.JBUI
 import java.awt.BorderLayout
 import java.awt.event.KeyEvent
 import java.awt.Dimension
-import java.util.Locale
 import java.util.concurrent.ExecutorService
 import javax.swing.JButton
 import javax.swing.JPanel
@@ -37,7 +34,7 @@ import javax.swing.KeyStroke
 
 class JanitorReplPanel(project: Project) : JPanel(BorderLayout()), Disposable {
     private val outputArea = JBTextArea()
-    private val promptLabel = JBLabel("janitor> ")
+    private val promptLabel = JBLabel(">")
     private val inputField = EditorTextField("", project, JanitorFileType.INSTANCE)
     private val executor: ExecutorService = AppExecutorUtil.createBoundedApplicationPoolExecutor("JanitorRepl", 1)
     private val submitAction = object : AnAction() {
@@ -59,15 +56,14 @@ class JanitorReplPanel(project: Project) : JPanel(BorderLayout()), Disposable {
         inputField.background = scheme.defaultBackground
         inputField.foreground = scheme.defaultForeground
 
-        val env: JanitorEnvironment = object : JanitorDefaultEnvironment(JanitorFormattingLocale(Locale.getDefault())) {
-            override fun warn(message: String) {
-                io.error(message)
-            }
+        val env = IdeScriptingEnvironment(project) { message ->
+            io.error(message)
         }
         val runtime: JanitorRuntime = object : BaseRuntime(env) {
             override fun print(process: JanitorScriptProcess, args: JCallArgs): JanitorObject {
                 for (janitorObject in args.list) {
                     io.print(janitorObject.janitorToString())
+                    io.print(" ")
                 }
                 io.println("")
                 return JNull.NULL
@@ -132,6 +128,18 @@ class JanitorReplPanel(project: Project) : JPanel(BorderLayout()), Disposable {
             repl.acceptText(text)
             updatePrompt()
         }
+    }
+
+    fun runScript(text: String, sourceName: String?) {
+        val header = sourceName?.let { "-- running $it --" }
+        if (header != null) {
+            if (ApplicationManager.getApplication().isDispatchThread) {
+                outputArea.append(header + "\n")
+            } else {
+                ApplicationManager.getApplication().invokeLater { outputArea.append(header + "\n") }
+            }
+        }
+        submit(text)
     }
 
     private fun updatePrompt() {

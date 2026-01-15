@@ -30,8 +30,8 @@ class IdeReplIO(
         write(e.stackTraceToString() + "\n")
     }
 
-    override fun verbose(text: String) {
-        if (!verboseEnabled) {
+    override fun verbose(text: String?) {
+        if (!verboseEnabled || text == null) {
             return
         }
         write(text + "\n")

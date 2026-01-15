@@ -13,6 +13,9 @@
             id="JanitorWarnings"
             displayType="BALLOON"
             isLogByDefault="true"/>
+        <codeInsight.lineMarkerProvider
+            language="Janitor"
+            implementationClass="com.github.eischet.janitoridea.repl.JanitorRunLineMarkerProvider"/>
         <fileType
             name="Janitor"
             language="Janitor"
@@ -21,11 +24,25 @@
         <lang.syntaxHighlighterFactory
             language="Janitor"
             implementationClass="com.github.eischet.janitoridea.highlighting.JanitorSyntaxHighlighterFactory"/>
+        <lang.parserDefinition
+            language="Janitor"
+            implementationClass="com.github.eischet.janitoridea.language.JanitorParserDefinition"/>
         <toolWindow
             factoryClass="com.github.eischet.janitoridea.repl.JanitorReplToolWindowFactory"
             id="JanitorRepl"
             anchor="bottom"
-            sideTool="true"/>
+            sideTool="true"
+            icon="/icons/janitor_tool.svg"/>
         <postStartupActivity implementation="com.github.eischet.janitoridea.startup.MyProjectActivity" />
     </extensions>
+
+    <actions>
+        <action id="Janitor.RunFile"
+                class="com.github.eischet.janitoridea.actions.JanitorRunFileAction"
+                text="Run Janitor Script"
+                description="Run current Janitor file in the REPL">
+            <add-to-group group-id="RunMenu" anchor="last"/>
+            <add-to-group group-id="EditorPopupMenu" anchor="last"/>
+        </action>
+    </actions>
 </idea-plugin>

@@ -1,5 +1,9 @@
 # janitor-idea
 
+A rudimentary IntelliJ IDEA plugin for the Janitor scripting language ( https://github.com/eischet/janitor ). 
+This plugin provides a simple REPL and syntax highlighting for scripts.
+
+<!--
 ![Build](https://github.com/eischet/janitor-idea/workflows/Build/badge.svg)
 [![Version](https://img.shields.io/jetbrains/plugin/v/MARKETPLACE_ID.svg)](https://plugins.jetbrains.com/plugin/MARKETPLACE_ID)
 [![Downloads](https://img.shields.io/jetbrains/plugin/d/MARKETPLACE_ID.svg)](https://plugins.jetbrains.com/plugin/MARKETPLACE_ID)
@@ -16,6 +20,7 @@
 - [ ] Set the [Deployment Token](https://plugins.jetbrains.com/docs/marketplace/plugin-upload.html?from=IJPluginTemplate).
 - [ ] Click the <kbd>Watch</kbd> button on the top of the [IntelliJ Platform Plugin Template][template] to be notified about releases containing new features and fixes.
 - [ ] Configure the [CODECOV_TOKEN](https://docs.codecov.com/docs/quick-start) secret for automated test coverage reports on PRs
+-->
 
 <!-- Plugin description -->
 This Fancy IntelliJ Platform Plugin is going to be your implementation of the brilliant ideas that you have.
@@ -25,6 +30,7 @@ This specific section is a source for the [plugin.xml](/src/main/resources/META-
 To keep everything working, do not remove `<!-- ... -->` sections. 
 <!-- Plugin description end -->
 
+<!--
 ## Installation
 
 - Using the IDE built-in plugin system:
@@ -43,7 +49,7 @@ To keep everything working, do not remove `<!-- ... -->` sections.
 
   Download the [latest release](https://github.com/eischet/janitor-idea/releases/latest) and install it manually using
   <kbd>Settings/Preferences</kbd> > <kbd>Plugins</kbd> > <kbd>⚙️</kbd> > <kbd>Install plugin from disk...</kbd>
-
+-->
 
 ---
 Plugin based on the [IntelliJ Platform Plugin Template][template].
