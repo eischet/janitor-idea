@@ -27,6 +27,13 @@
         <lang.parserDefinition
             language="Janitor"
             implementationClass="com.github.eischet.janitoridea.language.JanitorParserDefinition"/>
+        <lang.findUsagesProvider
+            language="Janitor"
+            implementationClass="com.github.eischet.janitoridea.language.JanitorFindUsagesProvider"/>
+        <multiHostInjector implementation="com.github.eischet.janitoridea.language.injection.JanitorMavenScriptInjector"/>
+        <psi.referenceContributor
+            language="Janitor"
+            implementationClass="com.github.eischet.janitoridea.language.psi.JanitorReferenceContributor"/>
         <toolWindow
             factoryClass="com.github.eischet.janitoridea.repl.JanitorReplToolWindowFactory"
             id="JanitorRepl"

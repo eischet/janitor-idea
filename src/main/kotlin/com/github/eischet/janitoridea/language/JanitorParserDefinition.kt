@@ -1,11 +1,11 @@
 package com.github.eischet.janitoridea.language
 
-import com.github.eischet.janitoridea.grammar.JanitorLexer
+import com.eischet.janitor.lang.JanitorLexer
 import com.github.eischet.janitoridea.lexer.JanitorLexerAdapter
 import com.github.eischet.janitoridea.lexer.JanitorTokenTypes
+import com.github.eischet.janitoridea.language.psi.JanitorElementTypes
 import com.intellij.lang.ASTNode
 import com.intellij.lang.ParserDefinition
-import com.intellij.lang.PsiBuilder
 import com.intellij.lang.PsiParser
 import com.intellij.openapi.project.Project
 import com.intellij.psi.FileViewProvider
@@ -18,7 +18,7 @@ import com.intellij.psi.tree.TokenSet
 class JanitorParserDefinition : ParserDefinition {
     override fun createLexer(project: Project?) = JanitorLexerAdapter()
 
-    override fun createParser(project: Project?): PsiParser = JanitorPsiParser
+    override fun createParser(project: Project?): PsiParser = JanitorAntlrPsiParser()
 
     override fun getFileNodeType(): IFileElementType = FILE
 
@@ -28,7 +28,7 @@ class JanitorParserDefinition : ParserDefinition {
 
     override fun getStringLiteralElements(): TokenSet = STRINGS
 
-    override fun createElement(node: ASTNode): PsiElement = node.psi
+    override fun createElement(node: ASTNode): PsiElement = JanitorElementTypes.createPsiElement(node)
 
     override fun createFile(viewProvider: FileViewProvider): PsiFile = JanitorFile(viewProvider)
 
@@ -45,16 +45,5 @@ class JanitorParserDefinition : ParserDefinition {
             JanitorTokenTypes.get(JanitorLexer.STRING_LITERAL_TRIPLE_SINGLE),
             JanitorTokenTypes.get(JanitorLexer.STRING_LITERAL_TRIPLE_DOUBLE)
         )
-    }
-}
-
-private object JanitorPsiParser : PsiParser {
-    override fun parse(root: com.intellij.psi.tree.IElementType, builder: PsiBuilder): ASTNode {
-        val marker = builder.mark()
-        while (!builder.eof()) {
-            builder.advanceLexer()
-        }
-        marker.done(root)
-        return builder.treeBuilt
     }
 }

@@ -1,7 +1,7 @@
 package com.github.eischet.janitoridea.lexer
 
 import com.github.eischet.janitoridea.language.JanitorLanguage
-import com.github.eischet.janitoridea.grammar.JanitorLexer
+import com.eischet.janitor.lang.JanitorLexer
 import com.intellij.psi.TokenType
 import com.intellij.psi.tree.IElementType
 import org.antlr.v4.runtime.Token

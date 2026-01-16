@@ -1,6 +1,6 @@
 package com.github.eischet.janitoridea.highlighting
 
-import com.github.eischet.janitoridea.grammar.JanitorLexer
+import com.eischet.janitor.lang.JanitorLexer
 import com.github.eischet.janitoridea.lexer.JanitorLexerAdapter
 import com.github.eischet.janitoridea.lexer.JanitorTokenType
 import com.intellij.lexer.Lexer

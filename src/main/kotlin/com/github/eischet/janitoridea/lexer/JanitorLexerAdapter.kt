@@ -1,6 +1,6 @@
 package com.github.eischet.janitoridea.lexer
 
-import com.github.eischet.janitoridea.grammar.JanitorLexer
+import com.eischet.janitor.lang.JanitorLexer
 import com.intellij.lexer.LexerBase
 import com.intellij.psi.TokenType
 import com.intellij.psi.tree.IElementType
