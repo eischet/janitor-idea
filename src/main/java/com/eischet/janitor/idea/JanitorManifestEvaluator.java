@@ -34,7 +34,10 @@ public final class JanitorManifestEvaluator {
                                                  final @NotNull Consumer<String> warnSink)
         throws JanitorCompilerException, JanitorRuntimeException {
 
-        final IdeScriptingEnvironment env = new IdeScriptingEnvironment(project, warnSink::accept);
+        final IdeScriptingEnvironment env = new IdeScriptingEnvironment(project, message -> {
+            warnSink.accept(message);
+            return kotlin.Unit.INSTANCE;
+        });
         final JanitorRuntime runtime = new BaseRuntime(env) {
             @Override
             public JanitorObject print(JanitorScriptProcess process, JCallArgs args) {
