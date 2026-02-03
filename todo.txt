@@ -1,0 +1,13 @@
+Startup error: find out where this is coming from; I suspect a fishy setting in the plugin.xml
+
+com.intellij.diagnostic.PluginException: implementation class is not specified [Plugin: com.github.eischet.janitoridea]
+	at com.intellij.serviceContainer.LazyExtensionInstance.createInstance(LazyExtensionInstance.java:55)
+	at com.intellij.serviceContainer.LazyExtensionInstance.getInstance(LazyExtensionInstance.java:46)
+	at com.intellij.serviceContainer.BaseKeyedLazyInstance.getInstance(BaseKeyedLazyInstance.java:38)
+	at com.intellij.openapi.util.KeyedExtensionCollector.instantiate(KeyedExtensionCollector.java:200)
+	at com.intellij.openapi.util.KeyedExtensionCollector.buildExtensionsFromExtensionPoint(KeyedExtensionCollector.java:162)
+	at com.intellij.openapi.util.KeyedExtensionCollector.buildExtensions(KeyedExtensionCollector.java:135)
+	at com.intellij.lang.LanguageExtension.buildExtensions(LanguageExtension.java:157)
+	at com.intellij.lang.LanguageExtension.buildExtensions(LanguageExtension.java:16)
+	at com.intellij.openapi.util.KeyedExtensionCollector.forKey(KeyedExtensionCollector.java:112)
+	at com.intellij.lang.LanguageExtension.collectAllForLanguage(LanguageExtension.java:128)

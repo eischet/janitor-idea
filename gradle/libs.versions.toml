@@ -1,4 +1,7 @@
 [versions]
+# main lib
+janitor = "0.9.42"
+
 # libraries
 antlr = "4.13.1"
 junit = "4.13.2"
@@ -16,6 +19,7 @@ antlr = { group = "org.antlr", name = "antlr4", version.ref = "antlr" }
 antlrRuntime = { group = "org.antlr", name = "antlr4-runtime", version.ref = "antlr" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 opentest4j = { group = "org.opentest4j", name = "opentest4j", version.ref = "opentest4j" }
+janitorRepl = { group = "com.eischet.janitor", "name" = "janitor-repl", version.ref = "janitor" }
 
 [plugins]
 changelog = { id = "org.jetbrains.changelog", version.ref = "changelog" }

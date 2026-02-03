@@ -35,6 +35,7 @@ public final class JanitorManifestResolver {
                                                final @NotNull Consumer<String> warnSink) {
         Path basePath = projectBasePath(project);
         if (basePath == null) {
+            warnSink.accept("Janitor manifest: project base path is null");
             return Janitor.map();
         }
 
@@ -45,19 +46,25 @@ public final class JanitorManifestResolver {
             if (parent != null && parent.startsWith(basePath)) {
                 targetDir = parent;
             }
+        } else {
+            warnSink.accept("Janitor manifest: script file is null, using project base path");
         }
 
         List<Path> manifests = collectManifestFiles(basePath, targetDir);
         if (manifests.isEmpty()) {
+            warnSink.accept("Janitor manifest: no manifests found under " + targetDir);
             return Janitor.map();
         }
 
+        warnSink.accept("Janitor manifest: loading " + manifests.size() + " file(s)");
         JMap merged = Janitor.map();
         for (Path manifest : manifests) {
             String source = readFile(manifest);
             if (source == null) {
+                warnSink.accept("Janitor manifest: failed to read " + manifest);
                 continue;
             }
+            warnSink.accept("Janitor manifest: evaluating " + manifest);
             try {
                 JMap map = JanitorManifestEvaluator.evaluateManifest(
                     project,
@@ -68,8 +75,10 @@ public final class JanitorManifestResolver {
                 mergeMaps(merged, map);
             } catch (JanitorCompilerException | JanitorRuntimeException e) {
                 LOG.warn("Failed to evaluate Janitor manifest: " + manifest, e);
+                warnSink.accept("Janitor manifest: failed to evaluate " + manifest + " (" + e.getClass().getSimpleName() + ")");
             } catch (RuntimeException e) {
                 LOG.warn("Failed to merge Janitor manifest: " + manifest, e);
+                warnSink.accept("Janitor manifest: failed to merge " + manifest + " (" + e.getClass().getSimpleName() + ")");
             }
         }
         return merged;

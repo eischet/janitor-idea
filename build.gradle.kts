@@ -35,7 +35,7 @@ repositories {
 // Dependencies are managed with Gradle version catalog - read more: https://docs.gradle.org/current/userguide/version_catalogs.html
 dependencies {
     implementation(libs.antlrRuntime)
-    implementation("com.eischet.janitor:janitor-repl:0.9.41")
+    implementation("com.eischet.janitor:janitor-repl:0.9.42")
     testImplementation(libs.junit)
     testImplementation(libs.opentest4j)
 

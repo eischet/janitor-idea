@@ -30,6 +30,9 @@
         <lang.findUsagesProvider
             language="Janitor"
             implementationClass="com.github.eischet.janitoridea.language.JanitorFindUsagesProvider"/>
+        <lang.documentationProvider
+            language="Janitor"
+            implementationClass="com.github.eischet.janitoridea.language.doc.JanitorDocumentationProvider"/>
         <multiHostInjector implementation="com.github.eischet.janitoridea.language.injection.JanitorMavenScriptInjector"/>
         <psi.referenceContributor
             language="Janitor"
