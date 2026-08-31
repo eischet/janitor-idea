@@ -13,6 +13,10 @@
             id="JanitorWarnings"
             displayType="BALLOON"
             isLogByDefault="true"/>
+        <notificationGroup
+            id="Janitor"
+            displayType="BALLOON"
+            isLogByDefault="true"/>
         <codeInsight.lineMarkerProvider
             language="Janitor"
             implementationClass="com.github.eischet.janitoridea.repl.JanitorRunLineMarkerProvider"/>
