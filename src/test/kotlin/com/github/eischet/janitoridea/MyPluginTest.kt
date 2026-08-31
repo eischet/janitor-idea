@@ -5,8 +5,10 @@ import com.intellij.openapi.components.service
 import com.intellij.psi.xml.XmlFile
 import com.intellij.testFramework.TestDataPath
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
+import com.intellij.openapi.vfs.newvfs.impl.VfsRootAccess
 import com.intellij.util.PsiErrorElementUtil
 import com.github.eischet.janitoridea.services.MyProjectService
+import java.io.File
 
 @TestDataPath("\$CONTENT_ROOT/src/test/testData")
 class MyPluginTest : BasePlatformTestCase() {
@@ -35,5 +37,10 @@ class MyPluginTest : BasePlatformTestCase() {
         assertNotSame(projectService.getRandomNumber(), projectService.getRandomNumber())
     }
 
-    override fun getTestDataPath() = "src/test/testData/rename"
+    override fun setUp() {
+        super.setUp()
+        VfsRootAccess.allowRootAccess(getTestRootDisposable(), getTestDataPath())
+    }
+
+    override fun getTestDataPath() = File("src/test/testData/rename").absolutePath
 }

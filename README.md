@@ -26,6 +26,18 @@ A rudimentary IntelliJ IDEA plugin for the Janitor scripting language ( https://
 
 This plugin provides a simple REPL and syntax highlighting for scripts.
 
+## Building with a Janitor prerelease
+
+The default build uses the Janitor version and repository from `gradle.properties`.
+For an internal prerelease, override both properties without changing tracked files:
+
+```text
+gradlew.bat build -PjanitorVersion=0.9.62 -PjanitorRepositoryUrl=https://your-internal-repository/releases
+```
+
+The repository can use the usual Maven/Gradle credentials configuration. A normal
+`gradlew.bat build` continues to use the configured official version.
+
 <!--
 ## Installation
 

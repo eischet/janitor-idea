@@ -5,7 +5,7 @@ import com.eischet.janitor.api.JanitorScriptProcess;
 import com.eischet.janitor.api.errors.compiler.JanitorCompilerException;
 import com.eischet.janitor.api.errors.runtime.JanitorRuntimeException;
 import com.eischet.janitor.api.scopes.Scope;
-import com.eischet.janitor.api.scopes.ScriptModule;
+import com.eischet.janitor.api.scopes.ScriptSource;
 import com.eischet.janitor.api.types.JanitorObject;
 import com.eischet.janitor.api.types.builtin.JMap;
 import com.eischet.janitor.api.types.builtin.JNull;
@@ -46,7 +46,7 @@ public final class JanitorManifestEvaluator {
         };
 
         final JanitorParser.ScriptContext script = JanitorScript.parseScript(source);
-        final ScriptModule module = ScriptModule.unnamed(source);
+        final ScriptSource module = ScriptSource.unnamed(source);
         final Script scriptObject;
         try {
             scriptObject = JanitorCompiler.build(env, module, script, source);

@@ -16,14 +16,18 @@ version = providers.gradleProperty("pluginVersion").get()
 
 // Set the JVM language level used to build the project.
 kotlin {
-    jvmToolchain(21)
+    jvmToolchain(25)
 }
 
 // Configure project's dependencies
 repositories {
     mavenCentral()
     maven {
-        url = uri("https://repo.srv.eischet.net/releases")
+        url = uri(
+            providers.gradleProperty("janitorRepositoryUrl")
+                .orElse("https://repo.srv.eischet.net/releases")
+                .get()
+        )
     }
 
     // IntelliJ Platform Gradle Plugin Repositories Extension - read more: https://plugins.jetbrains.com/docs/intellij/tools-intellij-platform-gradle-plugin-repositories-extension.html
@@ -35,7 +39,18 @@ repositories {
 // Dependencies are managed with Gradle version catalog - read more: https://docs.gradle.org/current/userguide/version_catalogs.html
 dependencies {
     implementation(libs.antlrRuntime)
-    implementation("com.eischet.janitor:janitor-repl:0.9.42")
+    implementation(
+        "com.eischet.janitor:janitor-repl:" +
+            providers.gradleProperty("janitorVersion").orElse("0.9.42").get()
+    )
+    implementation(
+        "com.eischet.janitor:janitor-api:" +
+            providers.gradleProperty("janitorVersion").orElse("0.9.42").get()
+    )
+    implementation(
+        "com.eischet.janitor:janitor-lang:" +
+            providers.gradleProperty("janitorVersion").orElse("0.9.42").get()
+    )
     testImplementation(libs.junit)
     testImplementation(libs.opentest4j)
 
