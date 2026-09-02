@@ -32,11 +32,11 @@ import javax.swing.JButton
 import javax.swing.JPanel
 import javax.swing.KeyStroke
 
-class JanitorReplPanel(project: Project) : JPanel(BorderLayout()), Disposable {
+class JanitorReplPanel(private val project: Project) : JPanel(BorderLayout()), Disposable {
     private val outputArea = JBTextArea()
     private val promptLabel = JBLabel(">")
     private val inputField = EditorTextField("", project, JanitorFileType.INSTANCE)
-    private val executor: ExecutorService = AppExecutorUtil.createBoundedApplicationPoolExecutor("JanitorRepl", 1)
+    private var executor: ExecutorService = AppExecutorUtil.createBoundedApplicationPoolExecutor("JanitorRepl", 1)
     private val submitAction = object : AnAction() {
         override fun actionPerformed(e: AnActionEvent) {
             submitCurrentText()
@@ -44,7 +44,7 @@ class JanitorReplPanel(project: Project) : JPanel(BorderLayout()), Disposable {
     }
 
     private val io = IdeReplIO(outputArea)
-    private val repl: JanitorRepl
+    private var repl: JanitorRepl = createRepl()
 
     init {
         outputArea.isEditable = false
@@ -56,21 +56,6 @@ class JanitorReplPanel(project: Project) : JPanel(BorderLayout()), Disposable {
         inputField.background = scheme.defaultBackground
         inputField.foreground = scheme.defaultForeground
 
-        val env = IdeScriptingEnvironment(project) { message ->
-            io.error(message)
-        }
-        val runtime: JanitorRuntime = object : BaseRuntime(env) {
-            override fun print(process: JanitorScriptProcess, args: JCallArgs): JanitorObject {
-                for (janitorObject in args.list) {
-                    io.print(janitorObject.janitorToString())
-                    io.print(" ")
-                }
-                io.println("")
-                return JNull.NULL
-            }
-        }
-
-        repl = JanitorRepl(runtime, io)
         repl.getLogo()?.let { logo ->
             io.println(logo)
         }
@@ -86,10 +71,16 @@ class JanitorReplPanel(project: Project) : JPanel(BorderLayout()), Disposable {
         inputScroll.border = JBUI.Borders.empty()
         inputField.preferredSize = Dimension(0, inputField.preferredSize.height * 3)
         inputPanel.add(inputScroll, BorderLayout.CENTER)
-        inputPanel.add(JButton("Run").apply {
+        val buttonPanel = JPanel(BorderLayout())
+        buttonPanel.add(JButton("Run").apply {
             toolTipText = "Run (Shift+Enter)"
             addActionListener { submitCurrentText() }
+        }, BorderLayout.CENTER)
+        buttonPanel.add(JButton("Restart").apply {
+            toolTipText = "Restart the REPL: discards all variables and any pending/stuck input"
+            addActionListener { restart() }
         }, BorderLayout.EAST)
+        inputPanel.add(buttonPanel, BorderLayout.EAST)
 
         val outputScroll = JBScrollPane(outputArea)
         val splitter = OnePixelSplitter(true, 0.8f)
@@ -148,6 +139,39 @@ class JanitorReplPanel(project: Project) : JPanel(BorderLayout()), Disposable {
         } else {
             ApplicationManager.getApplication().invokeLater { promptLabel.text = repl.prompt }
         }
+    }
+
+    private fun createRepl(): JanitorRepl {
+        val env = IdeScriptingEnvironment(project) { message ->
+            io.error(message)
+        }
+        val runtime: JanitorRuntime = object : BaseRuntime(env) {
+            override fun print(process: JanitorScriptProcess, args: JCallArgs): JanitorObject {
+                for (janitorObject in args.list) {
+                    io.print(janitorObject.janitorToString())
+                    io.print(" ")
+                }
+                io.println("")
+                return JNull.NULL
+            }
+        }
+        return JanitorRepl(runtime, io)
+    }
+
+    /**
+     * Discards the current REPL state (global scope, pending/incomplete input, and any
+     * script possibly still stuck in a background call) and starts over with a fresh one.
+     * The old executor is shut down forcibly, so this also recovers from a REPL that is
+     * hung inside a script call, not just from a parser stuck in a "..." continuation.
+     */
+    private fun restart() {
+        val oldExecutor = executor
+        executor = AppExecutorUtil.createBoundedApplicationPoolExecutor("JanitorRepl", 1)
+        oldExecutor.shutdownNow()
+        repl = createRepl()
+        io.clear()
+        io.println("-- REPL restarted --")
+        updatePrompt()
     }
 
     override fun dispose() {

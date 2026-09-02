@@ -1,5 +1,7 @@
 package com.github.eischet.janitoridea.repl
 
+import com.eischet.janitor.api.errors.runtime.JanitorNativeException
+import com.eischet.janitor.api.errors.runtime.JanitorRuntimeException
 import com.eischet.janitor.repl.ReplIO
 import com.intellij.openapi.application.ApplicationManager
 import java.io.IOException
@@ -27,7 +29,13 @@ class IdeReplIO(
 
     override fun exception(e: Exception) {
         write("Error: ${e.message}\n")
-        write(e.stackTraceToString() + "\n")
+        // A JanitorRuntimeException's message is already a formatted script-level traceback
+        // (module/line/source line down to the error), so the Java stack trace under it is just
+        // interpreter-internal noise -- except for JanitorNativeException, where the cause is a
+        // real Java exception from host code and the stack trace is the only way to debug it.
+        if (e !is JanitorRuntimeException || e is JanitorNativeException) {
+            write(e.stackTraceToString() + "\n")
+        }
     }
 
     override fun verbose(text: String?) {
@@ -35,6 +43,16 @@ class IdeReplIO(
             return
         }
         write(text + "\n")
+    }
+
+    fun clear() {
+        if (ApplicationManager.getApplication().isDispatchThread) {
+            outputArea.text = ""
+        } else {
+            ApplicationManager.getApplication().invokeLater {
+                outputArea.text = ""
+            }
+        }
     }
 
     private fun write(text: String) {

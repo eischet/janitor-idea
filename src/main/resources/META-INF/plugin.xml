@@ -40,7 +40,7 @@
         <multiHostInjector implementation="com.github.eischet.janitoridea.language.injection.JanitorMavenScriptInjector"/>
         <psi.referenceContributor
             language="Janitor"
-            implementationClass="com.github.eischet.janitoridea.language.psi.JanitorReferenceContributor"/>
+            implementation="com.github.eischet.janitoridea.language.psi.JanitorReferenceContributor"/>
         <toolWindow
             factoryClass="com.github.eischet.janitoridea.repl.JanitorReplToolWindowFactory"
             id="JanitorRepl"
