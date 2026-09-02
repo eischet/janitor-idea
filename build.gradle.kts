@@ -36,21 +36,16 @@ repositories {
     }
 }
 
+// The Janitor dependency version, e.g. "0.9.64-SNAPSHOT" for a prerelease build from the snapshot
+// repository, or a plain release version like "0.9.42".
+val janitorVersion = providers.gradleProperty("janitorVersion").orElse("0.9.42").get()
+
 // Dependencies are managed with Gradle version catalog - read more: https://docs.gradle.org/current/userguide/version_catalogs.html
 dependencies {
     implementation(libs.antlrRuntime)
-    implementation(
-        "com.eischet.janitor:janitor-repl:" +
-            providers.gradleProperty("janitorVersion").orElse("0.9.42").get()
-    )
-    implementation(
-        "com.eischet.janitor:janitor-api:" +
-            providers.gradleProperty("janitorVersion").orElse("0.9.42").get()
-    )
-    implementation(
-        "com.eischet.janitor:janitor-lang:" +
-            providers.gradleProperty("janitorVersion").orElse("0.9.42").get()
-    )
+    implementation("com.eischet.janitor:janitor-repl:$janitorVersion")
+    implementation("com.eischet.janitor:janitor-api:$janitorVersion")
+    implementation("com.eischet.janitor:janitor-lang:$janitorVersion")
     testImplementation(libs.junit)
     testImplementation(libs.opentest4j)
 
@@ -68,6 +63,18 @@ dependencies {
         bundledModules(providers.gradleProperty("platformBundledModules").map { it.split(',') })
 
         testFramework(TestFrameworkType.Platform)
+    }
+}
+
+// Snapshot repositories commonly prune older snapshot builds as soon as a newer one is deployed.
+// Gradle, however, caches the resolved artifact for a "changing" module (any -SNAPSHOT version)
+// for 24 hours by default, so after such a prune it keeps requesting a jar that no longer exists
+// until that cache expires or `--refresh-dependencies` is passed. Only worth doing when we're
+// actually depending on a SNAPSHOT build of Janitor; a release version has no changing modules to
+// begin with, so there'd be nothing to gain from disabling the cache.
+if (janitorVersion.endsWith("-SNAPSHOT")) {
+    configurations.all {
+        resolutionStrategy.cacheChangingModulesFor(0, "seconds")
     }
 }
 
